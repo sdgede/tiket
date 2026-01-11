@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.view.WindowCompat
+import com.example.tiket.Activities.Dashboard.DashboardActivity
 import com.example.tiket.MainActivity
 import com.example.tiket.R
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -38,7 +39,7 @@ class SplashActivity : AppCompatActivity() {
 
         setContent {
             SplashScreen(onGetstartedClick = {
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, DashboardActivity::class.java))
             })
         }
     }
