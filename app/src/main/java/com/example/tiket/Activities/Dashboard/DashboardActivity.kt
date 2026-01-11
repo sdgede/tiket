@@ -6,9 +6,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
@@ -27,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -54,9 +59,12 @@ fun MainScreen() {
     val viewModel: MainViewModel = viewModel() // Gunakan viewModel() delegate
     var showLocationLoading by remember { mutableStateOf(true) }
 
-    var from by remember { mutableStateOf("") }
-    var to by remember { mutableStateOf("") }
-    var classes by remember { mutableStateOf("") }
+    var from:String =""
+    var to:String =""
+    var classes:String =""
+    var adultPassenger: String = ""
+    var childPassenger: String = ""
+
 
     StatusTopBarColor()
 
@@ -109,7 +117,7 @@ fun MainScreen() {
                     ) { selectedItem ->
                         from = selectedItem
                     }
-                    Spacer(modifier = Modifier.padding(10.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     // To Selection
                     YellowTitle("To")
                     DropDownList(
@@ -120,14 +128,45 @@ fun MainScreen() {
                     ) { selectedItem ->
                         to = selectedItem
                     }
-                    Spacer(modifier = Modifier.padding(10.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Passenger Count
+                    YellowTitle("Passenger")
+                    Row (modifier = Modifier.fillMaxWidth()){
+                        PassengerCounter(
+                            title = "Adult",
+                            modifier = Modifier.weight(1f),
+                            onIntentSelected = {
+                                adultPassenger = it
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        PassengerCounter(
+                            title = "Child",
+                            modifier = Modifier.weight(1f),
+                            onIntentSelected = {
+                                childPassenger = it
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    // Calender
+                    Row{
+                        YellowTitle("Departure Date", Modifier.weight(1f))
+                        Spacer(modifier = Modifier.width(20.dp))
+                        YellowTitle("Return Date", Modifier.weight(1f))
+                    }
+                    DatePickerScreen(Modifier.weight(1f))
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     // Classes Selection
                     YellowTitle("Class")
                     val classesList = listOf("Economy Class", "Business Class", "First Class")
                     DropDownList(
                         items = classesList,
                         loadingIcon = painterResource(R.drawable.seat_black_ic),
-                        hint = "Select Destination",
+                        hint = "Select Class",
                         showLocationLoading = showLocationLoading
                     ) { selectedItem ->
                         classes = selectedItem
