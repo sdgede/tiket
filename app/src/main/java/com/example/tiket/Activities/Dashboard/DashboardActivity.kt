@@ -1,5 +1,6 @@
 package com.example.tiket.Activities.Dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,16 +26,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tiket.Activities.SearchResult.SearchResultActivity
+import com.example.tiket.Activities.Splash.GradientButton
 import com.example.tiket.Activities.Splash.StatusTopBarColor
 import com.example.tiket.Domain.LocationModel
 import com.example.tiket.R
@@ -64,6 +68,7 @@ fun MainScreen() {
     var classes:String =""
     var adultPassenger: String = ""
     var childPassenger: String = ""
+    val context = LocalContext.current
 
 
     StatusTopBarColor()
@@ -172,6 +177,19 @@ fun MainScreen() {
                         classes = selectedItem
                     }
 
+                    Spacer(modifier = Modifier.height(16.dp))
+                    // Search Button
+                    GradientButton(
+                        onClick = {
+                            val intent = Intent(context, SearchResultActivity::class.java).apply {
+                                putExtra("from", from)
+                                putExtra("to", to)
+                                putExtra("numPassengers", adultPassenger + childPassenger)
+                            }
+                            startActivity(context,intent, null)
+                        },
+                        text = "Search",
+                    )
                 }
             }
         }
