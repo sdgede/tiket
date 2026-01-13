@@ -60,7 +60,7 @@ class DashboardActivity : AppCompatActivity() {
 @Preview
 fun MainScreen() {
     val locations = remember { mutableStateListOf<LocationModel>() }
-    val viewModel: MainViewModel = viewModel() // Gunakan viewModel() delegate
+    val viewModel: MainViewModel = viewModel()
     var showLocationLoading by remember { mutableStateOf(true) }
 
     var from:String =""

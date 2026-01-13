@@ -28,7 +28,7 @@ class SearchResultActivity : AppCompatActivity() {
                 from = from,
                 to = to,
                 viewModel = viewModel,
-                onBackClick = { }
+                onBackClick = { finish() }
             )
         }
     }

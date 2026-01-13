@@ -38,9 +38,12 @@ class SplashActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         setContent {
-            SplashScreen(onGetstartedClick = {
-                startActivity(Intent(this, DashboardActivity::class.java))
-            })
+            SplashScreen(
+                onGetstartedClick = {
+                    startActivity(Intent(this, DashboardActivity::class.java))
+                    finish()
+                }
+            )
         }
     }
 }
