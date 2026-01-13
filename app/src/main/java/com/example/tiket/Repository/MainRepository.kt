@@ -1,5 +1,6 @@
 package com.example.tiket.Repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tiket.Domain.FlightModel
@@ -32,25 +33,49 @@ class MainRepository {
         return listData
     }
 
-    fun loadFiltered(from:String, to:String): LiveData<MutableList<FlightModel>> {
+    fun loadFiltered(from: String, to: String): LiveData<MutableList<FlightModel>> {
         val listData = MutableLiveData<MutableList<FlightModel>>()
         val ref = firebaseDatabase.getReference("Flights")
-        val query: Query = ref.orderByChild("From").equalTo(from)
+        val query: Query = ref.orderByChild("from").equalTo(from)
+
+        Log.d("FlightRepository", "loadFiltered: Starting query with from='$from', to='$to'")
+
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("FlightRepository", "onDataChange: Received ${snapshot.childrenCount} flights from Firebase")
+
                 val lists = mutableListOf<FlightModel>()
                 for (childSnapshot in snapshot.children) {
+                    Log.d("FlightRepository", "=== RAW DATA ===")
+                    Log.d("FlightRepository", childSnapshot.value.toString())
+                    Log.d("FlightRepository", "================")
+
                     val list = childSnapshot.getValue(FlightModel::class.java)
                     if (list != null) {
-                        if(list.To == to){
-                            lists.add(list)}
+                        Log.d("FlightRepository", "Processing flight: From=${list.from}, To=${list.to}")
+                        Log.d("FlightRepository", "ArilineLogo='${list.airlineLogo}', ArilineName='${list.airlineName}'")
+
+                        if (list.to == to) {
+                            lists.add(list)
+                            Log.d("FlightRepository", "Flight matched filter - added to list")
+                        } else {
+                            Log.d("FlightRepository", "Flight doesn't match destination filter - skipped")
+                        }
+                    } else {
+                        Log.w("FlightRepository", "Null flight data at key: ${childSnapshot.key}")
                     }
                 }
+
+                Log.d("FlightRepository", "loadFiltered: Total filtered flights = ${lists.size}")
+                listData.value = lists
             }
+
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e("FlightRepository", "loadFiltered: Firebase query cancelled", error.toException())
+                listData.value = mutableListOf()
             }
         })
+
         return listData
     }
 }

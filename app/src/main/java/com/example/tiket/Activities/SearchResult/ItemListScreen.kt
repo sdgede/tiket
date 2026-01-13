@@ -53,13 +53,14 @@ fun ItemListScreen(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(R.color.darkPurple))
+            .background(color = colorResource(R.color.darkPurple2))
             .padding(top = 36.dp, start = 16.dp, end = 16.dp)
     ) {
         val (backBtn, headerTitle, worldImg) = createRefs()
         Image(painter = painterResource(R.drawable.back),
             contentDescription = null,
             modifier = Modifier
+                .padding(top = 8.dp)
                 .clickable { onBackClick }
                 .constrainAs(backBtn) {
                     top.linkTo(parent.top)
@@ -78,7 +79,7 @@ fun ItemListScreen(
                 .constrainAs(headerTitle){
                     start.linkTo(backBtn.end, margin = 8.dp)
                     top.linkTo(backBtn.top)
-                    bottom.linkTo(backBtn.top)
+                    bottom.linkTo(backBtn.bottom)
                 }
         )
 
