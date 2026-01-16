@@ -1,5 +1,6 @@
 package com.example.tiket.Activities.SearchResult
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
+import com.example.tiket.Activities.SeatSelect.SeatSeleectActivity
 import com.example.tiket.Domain.FlightModel
 import com.example.tiket.R
 
@@ -31,7 +33,10 @@ fun FlightItem(item: FlightModel, index: Int){
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
             .clickable{
-
+                val intent = Intent(context, SeatSeleectActivity::class.java).apply {
+                    putExtra("flight", item)
+                }
+                context.startActivity(intent)
             }
             .background(
                 color = colorResource(R.color.lightPurple),
