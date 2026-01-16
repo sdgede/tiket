@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,6 +39,10 @@ fun PassengerCounter (
 ){
     var passengerCount by remember { mutableStateOf(1) }
 
+    LaunchedEffect(Unit) {
+        onIntentSelected(passengerCount.toString())
+    }
+
     Box(
         modifier = modifier
             .height(60.dp)
@@ -55,9 +60,9 @@ fun PassengerCounter (
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(painter = painterResource(R.drawable.passenger_ic),
-                    contentDescription = null,
+                contentDescription = null,
                 modifier = Modifier.size(24.dp)
-                )
+            )
             Spacer(modifier = Modifier.width(8.dp))
             // minus Button
             Box( modifier = Modifier
@@ -88,13 +93,13 @@ fun PassengerCounter (
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
 
-            // Plush Button
+            // Plus Button
             Box( modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight()
                 .clickable{
-                        passengerCount++
-                        onIntentSelected(passengerCount.toString())
+                    passengerCount++
+                    onIntentSelected(passengerCount.toString())
                 },
                 contentAlignment = Alignment.Center
             ){

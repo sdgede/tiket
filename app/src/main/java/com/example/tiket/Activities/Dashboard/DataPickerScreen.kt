@@ -47,8 +47,7 @@ fun DatePickerScreen(modifier: Modifier = Modifier ){
         DatePickerItem(
             modifier = modifier,
             dateText = departureDate,
-            onDateSelected = {
-                selectedDate ->
+            onDateSelected = { selectedDate ->
                 departureDate = selectedDate
             },
             dateFormat = dateFormat,
@@ -60,14 +59,12 @@ fun DatePickerScreen(modifier: Modifier = Modifier ){
 
         DatePickerItem(
             modifier = modifier,
-            dateText = departureDate,
-            onDateSelected = {
-                    selectedDate ->
+            dateText = returnDate,
+            onDateSelected = { selectedDate ->
                 returnDate = selectedDate
-
             },
             dateFormat = dateFormat,
-            calendar = departureCalendar,
+            calendar = returnCalendar,
             context = context
         )
     }

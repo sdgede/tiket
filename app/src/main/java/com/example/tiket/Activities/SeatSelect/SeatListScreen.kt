@@ -31,8 +31,8 @@ enum class SeatStatus{
 }
 
 data class Seat (
-    var status : SeatStatus,
-    var name : String
+    val status : SeatStatus,
+    val name : String
 )
 
 @Composable
@@ -47,18 +47,13 @@ fun SeatItemScreen(
     val selectedSeatNames = remember { mutableStateListOf<String>() }
 
     var seatCount by remember { mutableStateOf(0) }
-    var totalPrice by remember { mutableStateOf(0) }
+    var totalPrice by remember { mutableStateOf(0.0) }
 
     LaunchedEffect(fligh) {
         seatList.clear()
         seatList.addAll(generateSeatList(fligh))
         seatCount = selectedSeatNames.size
-        totalPrice = seatCount * fligh.price.toInt()
-    }
-
-    fun updatePriceAndCount(){
-        seatCount = selectedSeatNames.size
-        totalPrice = seatCount * fligh.price.toInt()
+        totalPrice = seatCount * fligh.price
     }
 
     ConstraintLayout(
@@ -114,17 +109,21 @@ fun SeatItemScreen(
                         onSeatClick = {
                             when(seat.status){
                                 SeatStatus.AVAILABLE -> {
-                                    seat.status = SeatStatus.SELECTED
+                                    // ✅ CRITICAL FIX: Buat object baru dengan copy() untuk trigger recomposition
+                                    seatList[index] = seat.copy(status = SeatStatus.SELECTED)
                                     selectedSeatNames.add(seat.name)
-                                    updatePriceAndCount() // ✅ FIXED: Tambahkan update
+                                    seatCount = selectedSeatNames.size
+                                    totalPrice = seatCount * fligh.price
                                 }
                                 SeatStatus.SELECTED -> {
-                                    seat.status = SeatStatus.AVAILABLE
+                                    // ✅ CRITICAL FIX: Buat object baru dengan copy() untuk trigger recomposition
+                                    seatList[index] = seat.copy(status = SeatStatus.AVAILABLE)
                                     selectedSeatNames.remove(seat.name)
-                                    updatePriceAndCount() // ✅ FIXED: Tambahkan update
+                                    seatCount = selectedSeatNames.size
+                                    totalPrice = seatCount * fligh.price
                                 }
                                 else ->{
-                                    // Tidak perlu update karena seat tidak bisa diklik
+                                    // Tidak bisa diklik
                                 }
                             }
                         }
@@ -135,11 +134,11 @@ fun SeatItemScreen(
         BottomSection(
             seatCount = seatCount,
             selectedSates = selectedSeatNames.joinToString(", "),
-            totalPrice = totalPrice.toDouble(),
+            totalPrice = totalPrice,
             onConfirmClick = {
                 if (seatCount > 0){
-                    fligh.classSeat = selectedSeatNames.joinToString(", ")
-                    fligh.price = totalPrice.toDouble()
+                    fligh.reservedSeats = selectedSeatNames.joinToString(", ")
+                    fligh.price = totalPrice
                     onConfirmClick(fligh)
                 } else {
                     Toast.makeText(context, "Please select at least one seat", Toast.LENGTH_SHORT).show()

@@ -33,7 +33,7 @@ fun TiketDetailHeader(onBackClick: () -> Unit, modifier: Modifier) {
             contentDescription = null,
             modifier = Modifier
                 .padding(top = 8.dp)
-                .clickable { onBackClick }
+                .clickable { onBackClick() }
                 .constrainAs(backBtn) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -41,7 +41,7 @@ fun TiketDetailHeader(onBackClick: () -> Unit, modifier: Modifier) {
         )
 
         Text(
-            text = "Choose Seats",
+            text = "Ticket Detail",
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
@@ -61,9 +61,7 @@ fun TiketDetailHeader(onBackClick: () -> Unit, modifier: Modifier) {
             modifier = Modifier
                 .constrainAs(worldImg) {
                     top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                }
-        )
-
+                    end.linkTo(parent.end)
+                })
     }
 }

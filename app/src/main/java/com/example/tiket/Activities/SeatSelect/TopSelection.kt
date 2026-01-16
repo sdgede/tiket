@@ -34,7 +34,7 @@ fun TopSelection(
             contentDescription = null,
             modifier = Modifier
                 .padding(top = 8.dp)
-                .clickable { onBackClick }
+                .clickable { onBackClick() }
                 .constrainAs(backBtn) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -62,7 +62,7 @@ fun TopSelection(
             modifier = Modifier
                 .constrainAs(worldImg) {
                     top.linkTo(parent.top)
-                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
                 }
         )
 
