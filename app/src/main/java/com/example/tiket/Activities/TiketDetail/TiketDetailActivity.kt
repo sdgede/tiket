@@ -1,6 +1,5 @@
-package com.example.tiket.Activities.SeatSelect
+package com.example.tiket.Activities.TiketDetail
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -8,31 +7,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tiket.Activities.Splash.StatusTopBarColor
-import com.example.tiket.Activities.TiketDetail.TiketDetailActivity
 import com.example.tiket.Domain.FlightModel
 import com.example.tiket.R
 
-class SeatSeleectActivity : AppCompatActivity() {
-    private lateinit var flight: FlightModel
-
+class TiketDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val flight = intent.getSerializableExtra("flight") as FlightModel
 
-        flight = intent.getSerializableExtra("flight") as FlightModel
-
-        setContent{
+        setContent {
             StatusTopBarColor()
-            SeatItemScreen(
-                fligh = flight,
+
+
+            TiketDetailScreen(
+                flight = flight,
                 onBackClick = {
                     finish()
                 },
-                onConfirmClick = {
-                    val intent = Intent(this, TiketDetailActivity::class.java).apply {
-                        putExtra("flight", flight)
-                    }
-                    startActivity(intent)
+                onDownloadClick = {
+
                 }
             )
         }

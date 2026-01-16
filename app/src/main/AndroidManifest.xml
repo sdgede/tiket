@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tiket">
         <activity
+            android:name=".Activities.TiketDetail.TiketDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.SeatSelect.SeatSeleectActivity"
             android:exported="false" />
         <activity
