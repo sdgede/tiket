@@ -1,7 +1,11 @@
 package com.example.tiket.Activities.SeatSelect
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,8 +16,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.example.tiket.Domain.FlightModel
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.os.unregisterForAllProfilingResults
 import com.example.tiket.R
 
 enum class SeatStatus{
@@ -49,14 +56,81 @@ fun SeatItemScreen(
         totalPrice = seatCount * fligh.price.toInt()
     }
 
+    fun updatePriceAndCount(){
+        seatCount = selectedSeatNames.size
+        totalPrice = seatCount * fligh.price.toInt()
+    }
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = colorResource(R.color.darkPurple2))
     ){
         val (topSection, middleSection, bottomSection) = createRefs()
+        TopSelection(
+            modifier = Modifier
+                .constrainAs(topSection){
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            onBackClick = onBackClick
+        )
+        ConstraintLayout(
+            modifier = Modifier
+                .padding(top = 100.dp)
+                .constrainAs(middleSection) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        ){
+            val (airplane, seatGrid) = createRefs()
+            Image(
+                painter = painterResource(R.drawable.airple_seat),
+                contentDescription = null,
+                modifier = Modifier.constrainAs(airplane){
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+            )
 
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(7),
+                modifier = Modifier
+                    .padding(top = 240.dp)
+                    .padding(horizontal = 64.dp)
+                    .constrainAs(seatGrid) {
+                        top.linkTo(parent.top)
+                        start.linkTo(airplane.start)
+                        end.linkTo(airplane.end)
+                    }
+            ) {
+                items(seatList.size){index ->
+                    val seat = seatList[index]
+                    SeatItem(
+                        seat=seat,
+                        onSeatClick = {
+                            when(seat.status){
+                                SeatStatus.AVAILABLE -> {
+                                    seat.status = SeatStatus.SELECTED
+                                    selectedSeatNames.add(seat.name)
 
+                                }
+                                SeatStatus.SELECTED -> {
+                                    seat.status = SeatStatus.AVAILABLE
+                                    selectedSeatNames.remove(seat.name)
+                                }
+                                else ->{
+                                    updatePriceAndCount()
+                                }
+                            }
+                        }
+                    )
+                }
+            }
+        }
     }
 }
 

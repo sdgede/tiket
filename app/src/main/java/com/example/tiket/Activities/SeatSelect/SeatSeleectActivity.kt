@@ -21,6 +21,13 @@ class SeatSeleectActivity : AppCompatActivity() {
 
         setContent{
             StatusTopBarColor()
+            SeatItemScreen(
+                fligh = flight,
+                onBackClick = {
+                    finish()
+                },
+                onConfirmClick = {}
+            )
         }
     }
 }
