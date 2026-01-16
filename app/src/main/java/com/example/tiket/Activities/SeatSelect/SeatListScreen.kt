@@ -1,5 +1,6 @@
 package com.example.tiket.Activities.SeatSelect
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +21,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.tiket.Domain.FlightModel
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.os.unregisterForAllProfilingResults
 import com.example.tiket.R
 
 enum class SeatStatus{
@@ -116,14 +116,15 @@ fun SeatItemScreen(
                                 SeatStatus.AVAILABLE -> {
                                     seat.status = SeatStatus.SELECTED
                                     selectedSeatNames.add(seat.name)
-
+                                    updatePriceAndCount() // ✅ FIXED: Tambahkan update
                                 }
                                 SeatStatus.SELECTED -> {
                                     seat.status = SeatStatus.AVAILABLE
                                     selectedSeatNames.remove(seat.name)
+                                    updatePriceAndCount() // ✅ FIXED: Tambahkan update
                                 }
                                 else ->{
-                                    updatePriceAndCount()
+                                    // Tidak perlu update karena seat tidak bisa diklik
                                 }
                             }
                         }
@@ -131,6 +132,25 @@ fun SeatItemScreen(
                 }
             }
         }
+        BottomSection(
+            seatCount = seatCount,
+            selectedSates = selectedSeatNames.joinToString(", "),
+            totalPrice = totalPrice.toDouble(),
+            onConfirmClick = {
+                if (seatCount > 0){
+                    fligh.classSeat = selectedSeatNames.joinToString(", ")
+                    fligh.price = totalPrice.toDouble()
+                    onConfirmClick(fligh)
+                } else {
+                    Toast.makeText(context, "Please select at least one seat", Toast.LENGTH_SHORT).show()
+                }
+            },
+            modifier = Modifier.constrainAs(bottomSection){
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
     }
 }
 
@@ -163,5 +183,4 @@ fun generateSeatList(flight : FlightModel): List<Seat> {
         }
     }
     return seatList
-
 }
